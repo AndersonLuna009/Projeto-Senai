@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reservas de Salas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Reservas de Salas</h1>
+            <div class="user-panel">
+                <span id="userName">Não conectado</span>
+                <button id="loginBtn">Entrar</button>
+                <button id="logoutBtn" class="hidden">Sair</button>
+            </div>
+        </header>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit">Entrar</button>
+                </form>
+                <p>Não tem uma conta? <a id="showRegister" href="#">Cadastre-se</a></p>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Cadastro</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regName">Nome:</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email:</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Senha:</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPasswordConfirm">Confirmar Senha:</label>
+                        <input type="password" id="regPasswordConfirm" required>
+                    </div>
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-section="calendar">Calendário</a></li>
+                <li>
+                    <a href="#" data-section="myReservations">
+                      Minhas Reservas <span id="myReservationsDot" class="hidden"></span>
+                    </a>
+                  </li>
+                  
+                <!-- <li><a href="#" data-section="notifications">Notificações <span id="notificationCount">0</span></a></li> -->
+                <li class="admin-only hidden"><a href="#" data-section="adminPanel">Painel Admin</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Calendário e Reservas -->
+            <section id="calendar" class="active-section">
+                <h2>Calendário de Disponibilidade</h2>
+                <div class="filter-controls">
+                    <div class="form-group">
+                        <label for="dateFilter">Data:</label>
+                        <input type="date" id="dateFilter">
+                    </div>
+                    <div class="form-group">
+                        <label for="roomFilter">Sala:</label>
+                        <select id="roomFilter">
+                            <option value="">Todas as salas</option>
+                        </select>
+                    </div>
+                    <button id="applyFilter">Filtrar</button>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="time-column">
+                        <div class="time-header">Horário</div>
+                        <div class="time-slot">08:00</div>
+                        <div class="time-slot">09:00</div>
+                        <div class="time-slot">10:00</div>
+                        <div class="time-slot">11:00</div>
+                        <div class="time-slot">12:00</div>
+                        <div class="time-slot">13:00</div>
+                        <div class="time-slot">14:00</div>
+                        <div class="time-slot">15:00</div>
+                        <div class="time-slot">16:00</div>
+                        <div class="time-slot">17:00</div>
+                    </div>
+                    <div class="rooms-grid" id="roomsGrid">
+                        <!-- Salas e slots serão adicionados pelo JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Minhas Reservas -->
+            <section id="myReservations" class="section">
+                <h2>Minhas Reservas</h2>
+                <div class="reservations-list" id="userReservations">
+                    <!-- Reservas serão adicionadas pelo JavaScript -->
+                </div>
+            </section>
+
+            <!-- Notificações -->
+            <section id="notifications" class="section">
+                <h2>Notificações</h2>
+                <div class="notifications-list" id="notificationsList">
+                    <!-- Notificações serão adicionadas pelo JavaScript -->
+                </div>
+            </section>
+
+            <!-- Painel Admin -->
+            <section id="adminPanel" class="section">
+                <h2>Painel do Administrador</h2>
+                
+                <div class="admin-tabs">
+                    <button class="tab-button active" data-tab="rooms">Gerenciar Salas</button>
+                    <button class="tab-button" data-tab="users">Gerenciar Usuários</button>
+                    <button class="tab-button" data-tab="allReservations">Todas as Reservas</button>
+                </div>
+                
+                <div id="rooms" class="tab-content active-tab">
+                    <h3>Gerenciar Salas</h3>
+                    <button id="addRoomBtn" class="admin-action">Adicionar Nova Sala</button>
+                    
+                    <div class="rooms-list" id="adminRoomsList">
+                        <!-- Salas serão adicionadas pelo JavaScript -->
+                    </div>
+                </div>
+                
+                <div id="users" class="tab-content">
+                    <h3>Gerenciar Usuários</h3>
+                    <div class="users-list" id="adminUsersList">
+                        <!-- Usuários serão adicionados pelo JavaScript -->
+                    </div>
+                </div>
+                
+                <div id="allReservations" class="tab-content">
+                    <h3>Todas as Reservas</h3>
+                    <div class="filter-controls">
+                        <div class="form-group">
+                            <label for="adminDateFilter">Data:</label>
+                            <input type="date" id="adminDateFilter">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminRoomFilter">Sala:</label>
+                            <select id="adminRoomFilter">
+                                <option value="">Todas as salas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminUserFilter">Usuário:</label>
+                            <select id="adminUserFilter">
+                                <option value="">Todos os usuários</option>
+                            </select>
+                        </div>
+                        <button id="adminApplyFilter">Filtrar</button>
+                    </div>
+                    
+                    <div class="reservations-list" id="adminReservationsList">
+                        <!-- Reservas serão adicionadas pelo JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal de Nova Reserva -->
+        <div id="newReservationModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Nova Reserva</h2>
+                <form id="reservationForm">
+                    <div class="form-group">
+                        <label for="reservationRoom">Sala:</label>
+                        <span id="reservationRoom"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationDate">Data:</label>
+                        <span id="reservationDate"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationStart">Horário de Início:</label>
+                        <span id="reservationStart"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationDuration">Duração (horas):</label>
+                        <select id="reservationDuration">
+                            <option value="1">1 hora</option>
+                            <option value="2">2 horas</option>
+                            <option value="3">3 horas</option>
+                            <option value="4">4 horas</option>
+                            <option value="5">5 horas</option>
+                            <option value="6">6 horas</option>
+                            <option value="7">7 horas</option>
+                            <option value="8">8 horas</option>
+                            <option value="9">9 horas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationTitle">Título:</label>
+                        <input type="text" id="reservationTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationDescription">Descrição:</label>
+                        <textarea id="reservationDescription"></textarea>
+                    </div>
+                    <button type="submit">Confirmar Reserva</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Adicionar Sala -->
+        <div id="addRoomModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Adicionar Nova Sala</h2>
+                <form id="addRoomForm">
+                    <div class="form-group">
+                        <label for="roomName">Nome da Sala:</label>
+                        <input type="text" id="roomName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="roomCapacity">Capacidade:</label>
+                        <input type="number" id="roomCapacity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="roomFeatures">Recursos:</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="hasProjector" value="projector">
+                            <label for="hasProjector">Projetor</label>
+                            
+                            <input type="checkbox" id="hasWhiteboard" value="whiteboard">
+                            <label for="hasWhiteboard">Quadro Branco</label>
+                            
+                            <input type="checkbox" id="hasVideoConf" value="videoconf">
+                            <label for="hasVideoConf">Videoconferência</label>
+                        </div>
+                    </div>
+                    <button type="submit">Adicionar Sala</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notifications toast -->
+        <div id="toast" class="toast hidden"></div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
